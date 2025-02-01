@@ -1,0 +1,22 @@
+[project]
+name = "bakesite"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Andrew Graham-Yooll", email = "andrewgy8@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = ["markdown-it-py[plugins]"]
+
+[project.scripts]
+bakesite = "bakesite:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]

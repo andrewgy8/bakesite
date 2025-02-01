@@ -1,0 +1,24 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: Deploy to PyPI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+    - name: Install dependencies
+      run: |
+        uv sync --all-extras
+    - name: Build
+      run: |
+        uv build
+    - name: Publish
+      run: |
+        uv publish
