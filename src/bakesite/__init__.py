@@ -5,7 +5,6 @@ import sys
 from bakesite.logging import *  # noqa: F401 F403
 
 from bakesite import parameters
-from bakesite.art import ASCII_LOGO
 from bakesite.compile import bake
 from bakesite.server import serve
 
@@ -17,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(
         prog="bakesite",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=f"{ASCII_LOGO}\nSimple static site generator ",
+        description="Bakesite. \nThe Simplest Static Site Generator.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("bake", help="bake your markdown files into a static site")
