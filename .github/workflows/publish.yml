@@ -1,12 +1,12 @@
-name: Deploy to GitHub Pages
+name: Release Package
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 jobs:
   deploy:
     name: Deploy to PyPI
     runs-on: ubuntu-latest
+    environment: release
     steps:
     - uses: actions/checkout@master
     - name: Install the latest version of uv
