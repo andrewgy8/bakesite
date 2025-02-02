@@ -1,8 +1,10 @@
-# Bakesite
+# Bakesite :pie:
 
-A refreshingly simple static site/blog generator. 
+A refreshingly simple static site generator. 
 
 Markdown in. HTML out.
+
+
 
 # Getting Started
 

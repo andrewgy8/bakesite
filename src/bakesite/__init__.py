@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="bakesite",
+        prog="Bakesite",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description="Bakesite. \nThe Simplest Static Site Generator.",
     )

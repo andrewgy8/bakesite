@@ -1,4 +1,4 @@
-<!-- title:Getting Started with bakesite -->
+<!-- title:Getting Started with Bakesite -->
 
 Here are some examples of how to write markdown. 
 
@@ -19,7 +19,7 @@ Here are some examples of how to write markdown.
 2. Second item  
 3. Third item  
 
-[bakesite](https://github.com/andrewgy8/bakesite)
+[Bakesite](https://github.com/andrewgy8/bakesite)
 
 ![Alt text](https://example.com/image.jpg)
 

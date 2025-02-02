@@ -1,6 +1,8 @@
 import unittest
 import os
 import shutil
+
+import pytest
 import bakesite.compile as compile
 from tests import path
 
@@ -115,16 +117,17 @@ class PagesTest(unittest.TestCase):
         with open(os.path.join(self.site_path, "placeholder-bar.txt")) as f:
             self.assertEqual(f.read(), "<div>bar:Admin:Bar</div>")
 
-    # def test_rendered_content_in_summary(self):
-    #     # Test that placeholders are populated in summary if and only if
-    #     # content rendering is enabled.
-    #     src = os.path.join(self.blog_path, 'placeholder*.txt')
-    #     post_dst = os.path.join(self.site_path, '{{ slug }}.txt')
-    #     list_dst = os.path.join(self.site_path, 'list.txt')
-    #     post_layout = ''
-    #     list_layout = '<div>{{ content }}</div>'
-    #     item_layout = '<p>{{ summary }}</p>'
-    #     posts = compile.make_pages(src, post_dst, post_layout, author='Admin')
-    #     compile.make_list(posts, list_dst, list_layout, item_layout)
-    #     with open(os.path.join(self.site_path, 'list.txt')) as f:
-    #         self.assertEqual(f.read(), '<div><p>{{ title }}:{{ author }}:Foo</p><p>bar:Admin:Bar</p></div>')
+    @pytest.mark.skip
+    def test_rendered_content_in_summary(self):
+        # Test that placeholders are populated in summary if and only if
+        # content rendering is enabled.
+        src = os.path.join(self.blog_path, 'placeholder*.txt')
+        post_dst = os.path.join(self.site_path, '{{ slug }}.txt')
+        list_dst = os.path.join(self.site_path, 'list.txt')
+        post_layout = ''
+        list_layout = '<div>{{ content }}</div>'
+        item_layout = '<p>{{ summary }}</p>'
+        posts = compile.make_pages(src, post_dst, post_layout, author='Admin')
+        compile.make_list(posts, list_dst, list_layout, item_layout)
+        with open(os.path.join(self.site_path, 'list.txt')) as f:
+            self.assertEqual(f.read(), '<div><p>{{ title }}:{{ author }}:Foo</p><p>bar:Admin:Bar</p></div>')
