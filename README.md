@@ -4,7 +4,7 @@ A refreshingly simple static site generator.
 
 Markdown in. HTML out.
 
-
+> As good as Grandma's pie.
 
 # Getting Started
 

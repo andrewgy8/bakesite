@@ -18,5 +18,9 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
 ]
+
+[tool.pytest.ini_options]
+addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=81"]
