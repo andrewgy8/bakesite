@@ -1,3 +1,6 @@
+from pathlib import Path
+import shutil
+import sys
 import pytest
 from bakesite import compile
 import os
@@ -18,12 +21,18 @@ def mock_params():
     }
 
 
-@pytest.mark.xfail
+@pytest.fixture
+def tmp_content_dir():
+    shutil.copytree("./src/bakesite/template", ".", dirs_exist_ok=True)
+    yield
+    shutil.rmtree("./content")
+
+
 class TestMain:
-    def test_site_missing(self, mock_params):
+    def test_site_missing(self, mock_params, tmp_content_dir):
         compile.bake(mock_params)
 
-    def test_site_exists(self, mock_params, tmp_path):
+    def test_site_exists(self, mock_params, tmp_path, tmp_content_dir):
         d = tmp_path / "_site"
         d.mkdir()
         f = d / "foo.txt"
@@ -33,8 +42,8 @@ class TestMain:
 
         assert not os.path.isfile("_site/foo.txt")
 
-    def test_default_params(self, mock_params, tmpdir):
-        compile.bake(mock_params, target_dir=tmpdir)
+    def test_default_params(self, mock_params, tmpdir, tmp_content_dir):
+        compile.bake(mock_params, target_dir=str(tmpdir))
 
         with open(tmpdir / "blog/index.html") as f:
             s1 = f.read()

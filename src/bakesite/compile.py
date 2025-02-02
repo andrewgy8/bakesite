@@ -200,7 +200,8 @@ def bake(params, target_dir="_site"):
     )
 
     # Fix attachments
-    shutil.copytree("content/blog/attachment", f"{target_dir}/attachment")
+    if os.path.isdir("content/blog/attachment"):
+        shutil.copytree("content/blog/attachment", f"{target_dir}/attachment")
     # Prefix all img src with /
     for src_path in glob.glob(f"{target_dir}/blog/*/index.html"):
         content = fread(src_path)
