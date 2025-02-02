@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Andrew Graham-Yooll", email = "andrewgy8@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.9"
 dependencies = ["markdown-it-py[plugins]"]
 
 [project.scripts]
