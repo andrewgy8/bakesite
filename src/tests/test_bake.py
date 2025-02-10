@@ -23,9 +23,10 @@ def mock_params():
 
 @pytest.fixture
 def tmp_content_dir():
-    shutil.copytree("./src/bakesite/template", ".", dirs_exist_ok=True)
+    shutil.copytree("./src/bakesite/boilerplate", ".", dirs_exist_ok=True)
     yield
     shutil.rmtree("./content")
+    os.remove("./settings.py")
 
 
 class TestMain:
