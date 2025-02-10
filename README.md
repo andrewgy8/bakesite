@@ -12,7 +12,9 @@ Markdown in. HTML out.
 pip install bakesite
 ```
 
-Create a `content` directory with a `blog` directory that contains all your markdown files. And then create a `content/index.md` file. 
+```
+bakesite init
+```
 
 ```
 bakesite bake

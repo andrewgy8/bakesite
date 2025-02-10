@@ -7,7 +7,10 @@ authors = [
     { name = "Andrew Graham-Yooll", email = "andrewgy8@gmail.com" }
 ]
 requires-python = ">=3.9"
-dependencies = ["markdown-it-py[plugins]"]
+dependencies = [
+    "click>=8.1.8",
+    "markdown-it-py[plugins]",
+]
 
 [project.scripts]
 bakesite = "bakesite:main"
