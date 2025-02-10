@@ -27,7 +27,6 @@ bakesite serve
 View the site on `http://localhost:8003`
 
 
-
 ### Yet Another Static Site Generator
 
 While I used both Jekyll, Pelican and Hugo for different iterations of my personal blog, I always felt the solution to the simple problem of static site building was over-engineered.
@@ -40,4 +39,10 @@ Why did it have to be so complicated? And how hard could it be to build?
 
 Thanks to a previous project by Sunaina Pai, Makesite, for providing the foundations of this project. 
 
+## Philosophy
 
+> Make the easy simple. And the hard possible. 
+
+## Disclaimer
+
+If you are looking for a site generator with reactive html elements, this project is most likely not for you. 
