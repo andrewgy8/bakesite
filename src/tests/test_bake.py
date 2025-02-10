@@ -29,7 +29,7 @@ def tmp_content_dir():
     os.remove("./settings.py")
 
 
-class TestMain:
+class TestBake:
     def test_site_missing(self, mock_params, tmp_content_dir):
         compile.bake(mock_params)
 
