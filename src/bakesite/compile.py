@@ -1,10 +1,10 @@
+import datetime
+import glob
 import logging
 import os
 import pathlib
-import shutil
 import re
-import glob
-import datetime
+import shutil
 
 logger = logging.getLogger(__name__)
 

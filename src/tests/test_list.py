@@ -1,8 +1,9 @@
-import tempfile
-import shutil
 import os
+import shutil
+import tempfile
 
 import pytest
+
 import bakesite.compile as compile
 
 
@@ -45,7 +46,7 @@ class TestList:
         compile.make_list(posts, dst, list_layout, item_layout, key="val")
 
         expected_path = os.path.join(tmp_site, "val.txt")
-        
+
         assert os.path.isfile(expected_path)
         with open(expected_path) as f:
             assert f.read() == "<div><p>Foo</p><p>Bar</p></div>"

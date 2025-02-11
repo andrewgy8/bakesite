@@ -1,9 +1,9 @@
-from pathlib import Path
-import shutil
-import sys
-import pytest
-from bakesite import compile
 import os
+import shutil
+
+import pytest
+
+from bakesite import compile
 
 
 @pytest.fixture
