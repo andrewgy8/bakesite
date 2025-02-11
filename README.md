@@ -4,8 +4,6 @@ A refreshingly simple static site generator.
 
 Write in Markdown, get HTML out.
 
-> As good as Grandma's pie.
-
 # Installation
 Install Bakesite using pip:
 
