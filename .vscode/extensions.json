@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "samuelcolvin.jinjahtml",
-        "ms-python.black-formatter",
-        "ms-python.isort"
+        "charliermarsh.ruff",
     ]
 }
