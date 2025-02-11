@@ -3,9 +3,8 @@ import sys
 
 import click
 
+from bakesite import boilerplate, compile, parameters, server
 from bakesite.logging import *  # noqa: F401 F403
-from bakesite import compile, server, boilerplate, parameters
-
 
 logger = logging.getLogger(__name__)
 

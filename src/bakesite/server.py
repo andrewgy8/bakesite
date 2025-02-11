@@ -5,7 +5,6 @@ import socketserver
 
 import click
 
-
 logger = logging.getLogger(__name__)
 
 

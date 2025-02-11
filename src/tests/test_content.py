@@ -1,6 +1,6 @@
-import unittest
-import shutil
 import os
+import shutil
+import unittest
 
 from bakesite import compile
 from tests import path
