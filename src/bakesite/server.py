@@ -1,14 +1,11 @@
 import functools
 import http.server
-import logging
 import socketserver
 
 import click
 
-logger = logging.getLogger(__name__)
 
-
-DEFAULT_PORT = 8003
+DEFAULT_PORT = 8200  # 8 is standard, 200 is the temp for deliciousness
 
 
 def serve(port=DEFAULT_PORT):
