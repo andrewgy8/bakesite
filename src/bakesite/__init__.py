@@ -1,3 +1,4 @@
+from email.policy import default
 import logging
 import sys
 
@@ -23,13 +24,13 @@ def init():
     boilerplate.initialize_project()
 
 
-@main.command()
-def bake():
-    """Bake your markdown files into a static site"""
+def _bake():
     try:
         params = parameters.load()
     except ImportError:
-        click.echo("settings.py file not found. Please add one to the project.", err=True)
+        click.echo(
+            "settings.py file not found. Please add one to the project.", err=True
+        )
         sys.exit(1)
     except AttributeError:
         click.echo("settings.py file does not contain a params dictionary.", err=True)
@@ -38,13 +39,27 @@ def bake():
 
 
 @main.command()
+def bake():
+    """Bake your markdown files into a static site"""
+    _bake()
+
+
+@main.command(help=f"Locally serve the site at http://localhost:{server.DEFAULT_PORT}")
 @click.option(
     "--port",
-    default=server.PORT,
-    help=f"Port to serve the site on. Default is {server.PORT}.",
+    default=server.DEFAULT_PORT,
+    help=f"Port to serve the site on. Default is {server.DEFAULT_PORT}.",
 )
-def serve(port):
-    """Locally serve the site at http://localhost:8003"""
+@click.option(
+    "--bake",
+    "do_bake",
+    is_flag=True,
+    default=False,
+    help="Bake the site before serving.",
+)
+def serve(port, do_bake):
+    if do_bake:
+        _bake()
     server.serve(port)
 
 

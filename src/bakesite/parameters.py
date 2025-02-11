@@ -2,6 +2,8 @@ import logging
 import os
 import sys
 
+import click
+
 logger = logging.getLogger(__name__)
 
 
@@ -11,5 +13,5 @@ def load():
     import settings
 
     params = settings.params
-    logger.info(f"Baking site with parameters: {params}")
+    click.echo(f"Baking site with parameters: {params}")
     return params
