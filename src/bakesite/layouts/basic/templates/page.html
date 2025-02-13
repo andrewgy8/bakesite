@@ -1,50 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ gtag_id }}"></script>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id={{ gtag_id }}"
+    ></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-    gtag('config', "{{ gtag_id }}");
+      gtag("config", "{{ gtag_id }}");
     </script>
     <title>{{ title }} - {{ subtitle }}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" type="text/css" href="{{ base_path }}/css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ base_path }}/css/style.css"
+    />
     <!-- Google tag (gtag.js) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script>hljs.highlightAll();</script>
-</head>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
 
-<body id="{{ slug }}">
-
-<nav>
-    <section>
+  <body id="{{ slug }}">
+    <nav>
+      <section>
         <span class="home">
-            <a href="{{ base_path }}/">Home</a>
-            <a href="{{ base_path }}/blog/">Writings</a>
+          <a href="{{ base_path }}/">Home</a>
+          <a href="{{ base_path }}/blog/">Writings</a>
         </span>
-    </section>
-</nav>
+      </section>
+    </nav>
 
-<main>
-{{ content }}
-</main>
+    <main>
+      {% block content %}
+        {{ content }}
+      {% endblock %}
+    </main>
 
-<footer>
-<section>
-<p>&copy; {{ current_year }} {{ author }}</p>
-<p>
-    <a href={{ github_url }}>GitHub</a>
-    <a href={{ linkedin_url }}>LinkedIn (CV)</a>
-    <a href="https://github.com/andrewgy8/bakesite">Built with Bakesite</a>
-</p>
-</section>
-</footer>
-
-</body>
+    <footer>
+      <section>
+        <p>&copy; {{ current_year }} {{ author }}</p>
+        <p>
+          <a href="{{ github_url }}">GitHub</a>
+          <a href="{{ linkedin_url }}">LinkedIn (CV)</a>
+          <a href="https://github.com/andrewgy8/bakesite">
+            Built with Bakesite
+          </a>
+        </p>
+      </section>
+    </footer>
+  </body>
 </html>

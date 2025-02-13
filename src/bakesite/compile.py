@@ -6,6 +6,11 @@ import pathlib
 import re
 import shutil
 
+from jinja2 import Environment, FileSystemLoader
+
+current_path = pathlib.Path(__file__).parent
+env = Environment(loader=FileSystemLoader(f"{current_path}/layouts/basic/templates"))
+
 logger = logging.getLogger(__name__)
 
 
@@ -90,7 +95,12 @@ def render(template, **params):
     )
 
 
-def make_pages(src, dst, layout, **params):
+def make_pages(
+    src,
+    dst,
+    template=None,
+    **params,
+):
     """Generate pages from page content."""
     items = []
 
@@ -104,11 +114,10 @@ def make_pages(src, dst, layout, **params):
             rendered_content = render(page_params["content"], **page_params)
             page_params["content"] = rendered_content
             content["content"] = rendered_content
-
         items.append(content)
-
+        params["content"] = content["content"]
+        output = env.get_template(template).render(**page_params)
         dst_path = render(dst, **page_params)
-        output = render(layout, **page_params)
 
         logger.info(f"Rendering {src_path} => {dst_path} ...")
         fwrite(dst_path, output)
@@ -116,18 +125,21 @@ def make_pages(src, dst, layout, **params):
     return sorted(items, key=lambda x: x["date"], reverse=True)
 
 
-def make_list(posts, dst, list_layout, item_layout, **params):
+def make_list(
+    posts, dst, list_item_template="item.html", list_template="list.html", **params
+):
     """Generate list page for a blog."""
     items = []
     for post in posts:
         item_params = dict(params, **post)
         item_params["summary"] = truncate(post["content"])
-        item = render(item_layout, **item_params)
+        item = env.get_template(list_item_template).render(**item_params)
+
         items.append(item)
 
     params["content"] = "".join(items)
     dst_path = render(dst, **params)
-    output = render(list_layout, **params)
+    output = env.get_template(list_template).render(**params)
 
     logger.info(f"Rendering list => {dst_path} ...")
     fwrite(dst_path, output)
@@ -148,52 +160,35 @@ def bake(params, target_dir="_site"):
     write_cname(params, target_dir)
     open(f"{target_dir}/.nojekyll", "a").close()
 
-    # Load layouts.
-    page_layout = fread(f"{current_path}/layouts/basic/templates/page.html")
-    post_layout = fread(f"{current_path}/layouts/basic/templates/post.html")
-    list_layout = fread(f"{current_path}/layouts/basic/templates/list.html")
-    item_layout = fread(f"{current_path}/layouts/basic/templates/item.html")
-    feed_xml = fread(f"{current_path}/layouts/basic/templates/feed.xml")
-    item_xml = fread(f"{current_path}/layouts/basic/templates/item.xml")
-
-    # Combine layouts to form final layouts.
-    post_layout = render(page_layout, content=post_layout)
-    list_layout = render(page_layout, content=list_layout)
     # Create site pages.
-    make_pages("content/index.md", f"{target_dir}/index.html", page_layout, **params)
     make_pages(
-        "content/[!_]*.html",
-        target_dir + "{{ slug }}/index.html",
-        page_layout,
-        **params,
+        "content/index.md", f"{target_dir}/index.html", template="page.html", **params
     )
 
     # Create blogs.
     blog_posts = make_pages(
         "content/blog/*.md",
         target_dir + "/blog/{{ slug }}/index.html",
-        post_layout,
         blog="blog",
+        template="post.html",
         **params,
     )
 
-    # Create blog list pages.
+    # # Create blog list pages.
     make_list(
         blog_posts,
         f"{target_dir}/blog/index.html",
-        list_layout,
-        item_layout,
         blog="blog",
         title="Blog",
         **params,
     )
 
-    # Create RSS feeds.
+    # # Create RSS feeds.
     make_list(
         blog_posts,
         f"{target_dir}/blog/rss.xml",
-        feed_xml,
-        item_xml,
+        list_item_template="item.xml",
+        list_template="feed.xml",
         blog="blog",
         title="Blog",
         **params,
