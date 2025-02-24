@@ -1,5 +1,4 @@
 import os
-import shutil
 
 import pytest
 
@@ -19,14 +18,6 @@ def mock_params():
         "gtag_id": "G-1234",
         "cname": "test.grahamyooll.com",
     }
-
-
-@pytest.fixture
-def tmp_content_dir():
-    shutil.copytree("./src/bakesite/boilerplate", ".", dirs_exist_ok=True)
-    yield
-    shutil.rmtree("./content")
-    os.remove("./settings.py")
 
 
 class TestBake:

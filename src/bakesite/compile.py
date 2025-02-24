@@ -7,6 +7,8 @@ import re
 import shutil
 
 from jinja2 import Environment, FileSystemLoader
+from markdown_it import MarkdownIt
+
 
 current_path = pathlib.Path(__file__).parent
 env = Environment(loader=FileSystemLoader(f"{current_path}/layouts/basic/templates"))
@@ -56,6 +58,7 @@ def read_content(filename):
 
     # Read metadata and save it in a dictionary.
     date_slug = os.path.basename(filename).split(".")[0]
+
     match = re.search(r"^(?:(\d\d\d\d-\d\d-\d\d)-)?(.+)$", date_slug)
     content = {
         "date": match.group(1) or "1970-01-01",
@@ -72,13 +75,8 @@ def read_content(filename):
 
     # Convert Markdown content to HTML.
     if filename.endswith((".md", ".mkd", ".mkdn", ".mdown", ".markdown")):
-        try:
-            from markdown_it import MarkdownIt
-
-            md = MarkdownIt("js-default", {"breaks": True, "html": True})
-            text = md.render(text)
-        except ImportError:
-            logger.warning(f"Cannot render Markdown in {filename}", exc_info=True)
+        md = MarkdownIt("js-default", {"breaks": True, "html": True})
+        text = md.render(text)
 
     # Update the dictionary with content and RFC 2822 date.
     content.update({"content": text, "rfc_2822_date": rfc_2822_format(content["date"])})
@@ -98,7 +96,8 @@ def render(template, **params):
 def make_pages(
     src,
     dst,
-    template=None,
+    template,
+    write_file=True,
     **params,
 ):
     """Generate pages from page content."""
@@ -118,9 +117,9 @@ def make_pages(
         params["content"] = content["content"]
         output = env.get_template(template).render(**page_params)
         dst_path = render(dst, **page_params)
-
         logger.info(f"Rendering {src_path} => {dst_path} ...")
-        fwrite(dst_path, output)
+        if write_file:
+            fwrite(dst_path, output)
 
     return sorted(items, key=lambda x: x["date"], reverse=True)
 
