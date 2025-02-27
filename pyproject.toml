@@ -29,4 +29,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=81"]
+addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=84"]

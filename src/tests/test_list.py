@@ -42,13 +42,12 @@ class TestList:
 
     def test_dst_params(self, tmp_site):
         posts = [{"content": "Foo"}, {"content": "Bar"}]
-        dst = os.path.join(tmp_site, "{{ key }}.txt")
-        list_layout = "<div>{{ content }}</div>"
-        item_layout = "<p>{{ content }}</p>"
-        compile.make_list(posts, dst, list_layout, item_layout, key="val")
+        dst = os.path.join(tmp_site, "{{ key }}.md")
 
-        expected_path = os.path.join(tmp_site, "val.txt")
+        compile.make_list(posts, dst, key="val")
+
+        expected_path = os.path.join(tmp_site, "val.md")
 
         assert os.path.isfile(expected_path)
         with open(expected_path) as f:
-            assert f.read() == "<div><p>Foo</p><p>Bar</p></div>"
+            assert '<p class="summary">\n    Foo' in f.read()

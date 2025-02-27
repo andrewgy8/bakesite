@@ -84,7 +84,7 @@ def read_content(filename):
     return content
 
 
-def render(template, **params):
+def rename_file_with_slug(template, **params):
     """Replace placeholders in template with values from params."""
     return re.sub(
         r"{{\s*([^}\s]+)\s*}}",
@@ -110,13 +110,15 @@ def make_pages(
 
         # Populate placeholders in content if content-rendering is enabled.
         if page_params.get("render") == "yes":
-            rendered_content = render(page_params["content"], **page_params)
+            rendered_content = rename_file_with_slug(
+                page_params["content"], **page_params
+            )
             page_params["content"] = rendered_content
             content["content"] = rendered_content
         items.append(content)
         params["content"] = content["content"]
         output = env.get_template(template).render(**page_params)
-        dst_path = render(dst, **page_params)
+        dst_path = rename_file_with_slug(dst, **page_params)
         logger.info(f"Rendering {src_path} => {dst_path} ...")
         if write_file:
             fwrite(dst_path, output)
@@ -137,7 +139,7 @@ def make_list(
         items.append(item)
 
     params["content"] = "".join(items)
-    dst_path = render(dst, **params)
+    dst_path = rename_file_with_slug(dst, **params)
     output = env.get_template(list_template).render(**params)
 
     logger.info(f"Rendering list => {dst_path} ...")
