@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.9"
 dependencies = [
     "click>=8.1.8",
+    "jinja2>=3.1.5",
     "markdown-it-py[plugins]",
 ]
 
@@ -28,4 +29,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=81"]
+addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=84"]

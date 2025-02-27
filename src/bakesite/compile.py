@@ -6,6 +6,13 @@ import pathlib
 import re
 import shutil
 
+from jinja2 import Environment, FileSystemLoader
+from markdown_it import MarkdownIt
+
+
+current_path = pathlib.Path(__file__).parent
+env = Environment(loader=FileSystemLoader(f"{current_path}/layouts/basic/templates"))
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,6 +58,7 @@ def read_content(filename):
 
     # Read metadata and save it in a dictionary.
     date_slug = os.path.basename(filename).split(".")[0]
+
     match = re.search(r"^(?:(\d\d\d\d-\d\d-\d\d)-)?(.+)$", date_slug)
     content = {
         "date": match.group(1) or "1970-01-01",
@@ -67,13 +75,8 @@ def read_content(filename):
 
     # Convert Markdown content to HTML.
     if filename.endswith((".md", ".mkd", ".mkdn", ".mdown", ".markdown")):
-        try:
-            from markdown_it import MarkdownIt
-
-            md = MarkdownIt("js-default", {"breaks": True, "html": True})
-            text = md.render(text)
-        except ImportError:
-            logger.warning(f"Cannot render Markdown in {filename}", exc_info=True)
+        md = MarkdownIt("js-default", {"breaks": True, "html": True})
+        text = md.render(text)
 
     # Update the dictionary with content and RFC 2822 date.
     content.update({"content": text, "rfc_2822_date": rfc_2822_format(content["date"])})
@@ -81,7 +84,7 @@ def read_content(filename):
     return content
 
 
-def render(template, **params):
+def rename_file_with_slug(template, **params):
     """Replace placeholders in template with values from params."""
     return re.sub(
         r"{{\s*([^}\s]+)\s*}}",
@@ -90,7 +93,13 @@ def render(template, **params):
     )
 
 
-def make_pages(src, dst, layout, **params):
+def make_pages(
+    src,
+    dst,
+    template,
+    write_file=True,
+    **params,
+):
     """Generate pages from page content."""
     items = []
 
@@ -101,33 +110,37 @@ def make_pages(src, dst, layout, **params):
 
         # Populate placeholders in content if content-rendering is enabled.
         if page_params.get("render") == "yes":
-            rendered_content = render(page_params["content"], **page_params)
+            rendered_content = rename_file_with_slug(
+                page_params["content"], **page_params
+            )
             page_params["content"] = rendered_content
             content["content"] = rendered_content
-
         items.append(content)
-
-        dst_path = render(dst, **page_params)
-        output = render(layout, **page_params)
-
+        params["content"] = content["content"]
+        output = env.get_template(template).render(**page_params)
+        dst_path = rename_file_with_slug(dst, **page_params)
         logger.info(f"Rendering {src_path} => {dst_path} ...")
-        fwrite(dst_path, output)
+        if write_file:
+            fwrite(dst_path, output)
 
     return sorted(items, key=lambda x: x["date"], reverse=True)
 
 
-def make_list(posts, dst, list_layout, item_layout, **params):
+def make_list(
+    posts, dst, list_item_template="item.html", list_template="list.html", **params
+):
     """Generate list page for a blog."""
     items = []
     for post in posts:
         item_params = dict(params, **post)
         item_params["summary"] = truncate(post["content"])
-        item = render(item_layout, **item_params)
+        item = env.get_template(list_item_template).render(**item_params)
+
         items.append(item)
 
     params["content"] = "".join(items)
-    dst_path = render(dst, **params)
-    output = render(list_layout, **params)
+    dst_path = rename_file_with_slug(dst, **params)
+    output = env.get_template(list_template).render(**params)
 
     logger.info(f"Rendering list => {dst_path} ...")
     fwrite(dst_path, output)
@@ -148,52 +161,35 @@ def bake(params, target_dir="_site"):
     write_cname(params, target_dir)
     open(f"{target_dir}/.nojekyll", "a").close()
 
-    # Load layouts.
-    page_layout = fread(f"{current_path}/layouts/basic/templates/page.html")
-    post_layout = fread(f"{current_path}/layouts/basic/templates/post.html")
-    list_layout = fread(f"{current_path}/layouts/basic/templates/list.html")
-    item_layout = fread(f"{current_path}/layouts/basic/templates/item.html")
-    feed_xml = fread(f"{current_path}/layouts/basic/templates/feed.xml")
-    item_xml = fread(f"{current_path}/layouts/basic/templates/item.xml")
-
-    # Combine layouts to form final layouts.
-    post_layout = render(page_layout, content=post_layout)
-    list_layout = render(page_layout, content=list_layout)
     # Create site pages.
-    make_pages("content/index.md", f"{target_dir}/index.html", page_layout, **params)
     make_pages(
-        "content/[!_]*.html",
-        target_dir + "{{ slug }}/index.html",
-        page_layout,
-        **params,
+        "content/index.md", f"{target_dir}/index.html", template="page.html", **params
     )
 
     # Create blogs.
     blog_posts = make_pages(
         "content/blog/*.md",
         target_dir + "/blog/{{ slug }}/index.html",
-        post_layout,
         blog="blog",
+        template="post.html",
         **params,
     )
 
-    # Create blog list pages.
+    # # Create blog list pages.
     make_list(
         blog_posts,
         f"{target_dir}/blog/index.html",
-        list_layout,
-        item_layout,
         blog="blog",
         title="Blog",
         **params,
     )
 
-    # Create RSS feeds.
+    # # Create RSS feeds.
     make_list(
         blog_posts,
         f"{target_dir}/blog/rss.xml",
-        feed_xml,
-        item_xml,
+        list_item_template="item.xml",
+        list_template="feed.xml",
         blog="blog",
         title="Blog",
         **params,

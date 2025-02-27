@@ -2,5 +2,6 @@
     "recommendations": [
         "samuelcolvin.jinjahtml",
         "charliermarsh.ruff",
+        "esbenp.prettier-vscode",
     ]
 }
