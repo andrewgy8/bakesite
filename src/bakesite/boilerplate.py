@@ -1,4 +1,3 @@
-import logging
 import os
 import shutil
 import sys
@@ -13,9 +12,9 @@ def _does_project_exist():
             err=True,
         )
         sys.exit(1)
-    elif os.path.exists(f"{os.getcwd()}/settings.py"):
+    elif os.path.exists(f"{os.getcwd()}/bakesite.yaml"):
         click.echo(
-            "Project already initialized since we detect you have settings.py file.",
+            "Project already initialized since we detect you have bakesite.yaml file.",
             err=True,
         )
         sys.exit(1)

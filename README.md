@@ -18,7 +18,7 @@ To create a new site, run the following command:
 bakesite init
 ```
 
-This will create a couple of files, including the content directory and the `settings.py` file necessary for building the site.
+This will create a couple of files, including the content directory and the `bakesite.yaml` file necessary for building the site.
 
 To bake the site and view it locally, run
 

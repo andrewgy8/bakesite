@@ -11,7 +11,7 @@ def tmp_content_dir():
     shutil.copytree("./src/bakesite/boilerplate", ".", dirs_exist_ok=True)
     yield
     shutil.rmtree("./content")
-    os.remove("./settings.py")
+    os.remove("./bakesite.yaml")
 
 
 @pytest.fixture
