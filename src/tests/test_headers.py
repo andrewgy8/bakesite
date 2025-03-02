@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import bakesite.compile as compile
 
 
@@ -36,6 +36,8 @@ tags:
     - Engineering
     - Teamwork
 render: true
+count: 5
+now: 1988-06-04T10:45:00
 edited on: 2025-02-28
 ---
 
@@ -47,6 +49,8 @@ edited on: 2025-02-28
             "title": "Groupthink In Engineering Teams",
             "tags": ["Engineering", "Teamwork"],
             "render": True,
+            "count": 5,
+            "now": datetime(1988, 6, 4, 10, 45),
             "edited on": date(2025, 2, 28),
         }
 
@@ -54,10 +58,10 @@ edited on: 2025-02-28
         text = "# What is Groupthink?"
         headers = compile.read_headers(text)
 
-        assert headers == {}
+        assert headers == {"author": "Admin"}
 
     def test_returns_empty_dict_when_no_content(self):
         text = ""
         headers = compile.read_headers(text)
 
-        assert headers == {}
+        assert headers == {"author": "Admin"}

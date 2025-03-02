@@ -42,7 +42,7 @@ class TestList:
 
     def test_dst_params(self, tmp_site):
         posts = [{"content": "Foo"}, {"content": "Bar"}]
-        dst = os.path.join(tmp_site, "{{ key }}.md")
+        dst = os.path.join(tmp_site, "{key}.md")
 
         compile.make_list(posts, dst, key="val")
 

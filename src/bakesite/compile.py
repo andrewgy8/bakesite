@@ -41,13 +41,14 @@ def truncate(text, words=25):
 
 def read_headers(text):
     tokens = markdown_client().parse(text)
-
     front_matter_token = next((t for t in tokens if t.type == "front_matter"), None)
+    default_headers = {"author": "Admin"}
+
     if front_matter_token:
         front_matter_content = front_matter_token.content
         return yaml.safe_load(front_matter_content)
     else:
-        return {}
+        return default_headers
 
 
 def rfc_2822_format(date_str):
@@ -69,20 +70,15 @@ def read_content(filename):
 
     # Read metadata and save it in a dictionary.
     date_slug = os.path.basename(filename).split(".")[0]
-
     match = re.search(r"^(?:(\d\d\d\d-\d\d-\d\d)-)?(.+)$", date_slug)
     content = {
         "date": match.group(1) or "1970-01-01",
         "slug": match.group(2),
     }
-
     # Read headers.
-    end = 0
-    for key, val, end in read_headers(text):
-        content[key] = val
+    headers = read_headers(text)
 
-    # Separate content from headers.
-    text = text[end:]
+    content.update(headers)
 
     # Convert Markdown content to HTML.
     if filename.endswith((".md", ".mkd", ".mkdn", ".mdown", ".markdown")):
@@ -94,13 +90,9 @@ def read_content(filename):
     return content
 
 
-def rename_file_with_slug(template, **params):
+def format_file_path(path_str, **params):
     """Replace placeholders in template with values from params."""
-    return re.sub(
-        r"{{\s*([^}\s]+)\s*}}",
-        lambda match: str(params.get(match.group(1), match.group(0))),
-        template,
-    )
+    return path_str.format(**params)
 
 
 def make_pages(
@@ -114,20 +106,15 @@ def make_pages(
 
     for src_path in glob.glob(src):
         content = read_content(src_path)
+        content.update(params)
 
-        page_params = dict(params, **content)
-
-        # Populate placeholders in content if content-rendering is enabled.
-        if page_params.get("render") == "yes":
-            rendered_content = rename_file_with_slug(
-                page_params["content"], **page_params
-            )
-            page_params["content"] = rendered_content
-            content["content"] = rendered_content
         items.append(content)
-        params["content"] = content["content"]
-        output = env.get_template(template).render(**page_params)
-        dst_path = rename_file_with_slug(dst, **page_params)
+
+        # Allow content to be rendered with template parameters and headers
+        if content.get("render"):
+            content["content"] = env.from_string(content["content"]).render(**content)
+        output = env.get_template(template).render(**content)
+        dst_path = format_file_path(dst, **content)
         logger.info(f"Rendering {src_path} => {dst_path} ...")
         fwrite(dst_path, output)
 
@@ -147,7 +134,7 @@ def make_list(
         items.append(item)
 
     params["content"] = "".join(items)
-    dst_path = rename_file_with_slug(dst, **params)
+    dst_path = format_file_path(dst, **params)
     output = env.get_template(list_template).render(**params)
 
     logger.info(f"Rendering list => {dst_path} ...")
@@ -177,7 +164,7 @@ def bake(params, target_dir="_site"):
     # Create blogs.
     blog_posts = make_pages(
         "content/blog/*.md",
-        target_dir + "/blog/{{ slug }}/index.html",
+        target_dir + "/blog/{slug}/index.html",
         blog="blog",
         template="post.html",
         **params,

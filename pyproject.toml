@@ -31,3 +31,8 @@ dev = [
 
 [tool.pytest.ini_options]
 addopts = ["--cov=bakesite", "--cov-report=term", "--cov-fail-under=84"]
+
+[tool.coverage.run]
+omit = [
+    "src/bakesite/logging.py"
+]

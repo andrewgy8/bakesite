@@ -23,7 +23,7 @@ class TestPages:
     ):
         mock_glob.return_value = ["/content/blog/Getting-Started.md"]
         mock_fread.return_value = "Here are some examples of how to write markdown."
-        dst = "./_site/blog/{{ slug }}/index.html"
+        dst = "./_site/blog/{slug}/index.html"
 
         compile.make_pages("/content/blog", dst, template="post.html")
 
@@ -37,7 +37,7 @@ class TestPages:
         mock_glob.return_value = ["/content/blog/2025-01-31-Getting-Started.md"]
         mock_fread.return_value = "Here are some examples of how to write markdown."
         src_dir = "./content/blog/*.md"
-        dst = "./_site/blog/{{ slug }}/index.html"
+        dst = "./_site/blog/{slug}/index.html"
 
         compile.make_pages(src_dir, dst, template="post.html")
 
@@ -57,7 +57,7 @@ class TestPages:
         ]
 
         src_dir = "./content/blog/*.md"
-        dst = "./_site/blog/{{ slug }}/index.html"
+        dst = "./_site/blog/{slug}/index.html"
 
         posts = compile.make_pages(src_dir, dst, template="post.html")
 
@@ -73,18 +73,18 @@ class TestPages:
             "/content/blog/header-bar.md",
         ]
         mock_fread.side_effect = [
-            "<!-- title: Foo -->\n<!-- tag: foo -->\nFoo",
-            "<!-- title: Bar -->\n<!-- tag: bar -->\nBar",
+            "---\ntitle: Foo\ntags:\n- foo\n---\nFoo",
+            "---\ntitle: Bar\ntags:\n- bar\n---\nBar",
         ]
         src = "./content/blog/*.md"
-        dst = "./_site/{{ slug }}/index.html"
+        dst = "./_site/{slug}/index.html"
 
         posts = compile.make_pages(src, dst, template="post.html")
 
         assert posts[0]["title"] == "Foo"
-        assert posts[0]["tag"] == "foo"
+        assert posts[0]["tags"] == ["foo"]
         assert posts[1]["title"] == "Bar"
-        assert posts[1]["tag"] == "bar"
+        assert posts[1]["tags"] == ["bar"]
 
     def test_content_rendering_enabled_when_defined_via_kwargs(
         self, mock_glob, mock_fread, mock_fwrite
@@ -92,7 +92,7 @@ class TestPages:
         mock_glob.return_value = ["/content/blog/Getting-Started.md"]
         mock_fread.return_value = "foo:{{ author }}:Foo"
         src = "./content/blog/*.md"
-        dst = "./_site/blog/{{ slug }}/index.html"
+        dst = "./_site/blog/{slug}/index.html"
 
         compile.make_pages(src, dst, template="post.html", author="Admin", render="yes")
 
@@ -104,12 +104,12 @@ class TestPages:
         self, mock_glob, mock_fread, mock_fwrite
     ):
         mock_glob.return_value = ["/content/blog/Getting-Started.md"]
-        mock_fread.return_value = "<!-- render: yes -->\nfoo:{{ author }}:Foo"
+        mock_fread.return_value = "---\nrender: true\n---\nfoo:{{ author }}:Foo"
         src = "./content/blog/*.md"
-        dst = "./_site/blog/{{ slug }}/index.html"
+        dst = "./_site/blog/{slug}/index.html"
 
         compile.make_pages(src, dst, template="post.html", author="Admin")
 
         args = mock_fwrite.call_args_list[0][0]
         assert args[0] == "./_site/blog/Getting-Started/index.html"
-        assert "<p>foo:Admin:Foo</p>" in args[1]
+        assert "\n<p>foo:Admin:Foo</p>" in args[1]

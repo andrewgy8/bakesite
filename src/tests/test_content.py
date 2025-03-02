@@ -26,10 +26,16 @@ class TestContent:
         assert content["slug"] == "foo"
 
     def test_content_headers(self, mock_fread):
-        mock_fread.return_value = "<!-- a: 1 -->\n<!-- b: 2 -->\nFoo"
+        mock_fread.return_value = """---
+title: Hello
+tags:
+    - world
+    - foo
+---
+Foo"""
 
         content = compile.read_content("foo.md")
 
-        assert content["a"] == "1"
-        assert content["b"] == "2"
-        assert content["content"] == "<p>Foo</p>\n"
+        assert content["title"] == "Hello"
+        assert content["tags"] == ["world", "foo"]
+        assert content["content"] == "\n<p>Foo</p>\n"
