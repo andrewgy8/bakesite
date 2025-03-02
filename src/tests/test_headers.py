@@ -1,43 +1,67 @@
+from datetime import date, datetime
 import bakesite.compile as compile
 
 
 class TestHeaders:
-    def test_single_header(self):
-        text = "<!-- key1: val1 -->"
-        headers = list(compile.read_headers(text))
+    def test_returns_only_a_single_header(self):
+        text = """---
+title: Groupthink In Engineering Teams
+---"""
+        headers = compile.read_headers(text)
 
-        assert headers == [("key1", "val1", 19)]
+        assert headers == {"title": "Groupthink In Engineering Teams"}
 
-    def test_multiple_headers(self):
-        text = "<!-- key1: val1 -->\n<!-- key2: val2-->"
-        headers = list(compile.read_headers(text))
+    def test_returns_only_multiple_headers(self):
+        text = """---
+title: Groupthink In Engineering Teams
+tags:
+    - Engineering
+    - Teamwork
+render: true
+edited on: 2025-02-28
+---"""
+        headers = compile.read_headers(text)
 
-        assert headers == [("key1", "val1", 20), ("key2", "val2", 38)]
+        assert headers == {
+            "title": "Groupthink In Engineering Teams",
+            "tags": ["Engineering", "Teamwork"],
+            "render": True,
+            "edited on": date(2025, 2, 28),
+        }
 
-    def test_headers_and_text(self):
-        text = "<!-- a: 1 -->\n<!-- b: 2 -->\nFoo\n<!-- c: 3 -->"
-        headers = list(compile.read_headers(text))
+    def test_returns_only_headers_when_text_exists(self):
+        text = """---
+title: Groupthink In Engineering Teams
+tags:
+    - Engineering
+    - Teamwork
+render: true
+count: 5
+now: 1988-06-04T10:45:00
+edited on: 2025-02-28
+---
 
-        assert headers == [("a", "1", 14), ("b", "2", 28)]
+# What is Groupthink?"""
 
-    def test_headers_and_blank_line(self):
-        text = "<!-- a: 1 -->\n<!-- b: 2 -->\n\n<!-- c: 3 -->\n"
-        headers = list(compile.read_headers(text))
+        headers = compile.read_headers(text)
 
-        assert headers == [("a", "1", 14), ("b", "2", 29), ("c", "3", 43)]
+        assert headers == {
+            "title": "Groupthink In Engineering Teams",
+            "tags": ["Engineering", "Teamwork"],
+            "render": True,
+            "count": 5,
+            "now": datetime(1988, 6, 4, 10, 45),
+            "edited on": date(2025, 2, 28),
+        }
 
-    def test_multiline_header(self):
-        text = "<!--\na: 1 --><!-- b:\n2 -->\n<!-- c: 3\n-->"
-        headers = list(compile.read_headers(text))
+    def test_returns_empty_dict_when_no_headers(self):
+        text = "# What is Groupthink?"
+        headers = compile.read_headers(text)
 
-        assert headers == [("a", "1", 13), ("b", "2", 27), ("c", "3", 40)]
+        assert headers == {"author": "Admin"}
 
-    def test_no_header(self):
-        headers = list(compile.read_headers("Foo"))
+    def test_returns_empty_dict_when_no_content(self):
+        text = ""
+        headers = compile.read_headers(text)
 
-        assert headers == []
-
-    def test_empty_string(self):
-        headers = list(compile.read_headers(""))
-
-        assert headers == []
+        assert headers == {"author": "Admin"}

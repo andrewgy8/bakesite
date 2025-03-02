@@ -1,23 +1,6 @@
 import os
 
-import pytest
-
 from bakesite import compile
-
-
-@pytest.fixture
-def mock_params():
-    return {
-        "base_path": "",
-        "subtitle": "AGY",
-        "author": "Andrew Graham-Yooll",
-        "site_url": "https://test.grahamyooll.com",
-        "current_year": 2002,
-        "github_url": "https://github.com/andrewgy8",
-        "linkedin_url": "https://www.linkedin.com",
-        "gtag_id": "G-1234",
-        "cname": "test.grahamyooll.com",
-    }
 
 
 class TestBake:
