@@ -1,12 +1,8 @@
-import logging
 import sys
 
 import click
 
 from bakesite import boilerplate, compile, parameters, server
-from bakesite.logging import *  # noqa: F401 F403
-
-logger = logging.getLogger(__name__)
 
 
 @click.group()

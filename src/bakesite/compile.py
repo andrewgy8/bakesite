@@ -8,6 +8,8 @@ import shutil
 
 from jinja2 import Environment, FileSystemLoader
 from markdown_it import MarkdownIt
+from mdit_py_plugins.front_matter import front_matter_plugin
+import yaml
 
 
 current_path = pathlib.Path(__file__).parent
@@ -38,17 +40,26 @@ def truncate(text, words=25):
 
 
 def read_headers(text):
-    """Parse headers in text and yield (key, value, end-index) tuples."""
-    for match in re.finditer(r"\s*<!--\s*(.+?)\s*:\s*(.+?)\s*-->\s*|.+", text):
-        if not match.group(1):
-            break
-        yield match.group(1), match.group(2), match.end()
+    tokens = markdown_client().parse(text)
+
+    front_matter_token = next((t for t in tokens if t.type == "front_matter"), None)
+    if front_matter_token:
+        front_matter_content = front_matter_token.content
+        return yaml.safe_load(front_matter_content)
+    else:
+        return {}
 
 
 def rfc_2822_format(date_str):
     """Convert yyyy-mm-dd date string to RFC 2822 format date string."""
     d = datetime.datetime.strptime(date_str, "%Y-%m-%d")
     return d.strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+
+def markdown_client():
+    md = MarkdownIt("js-default", {"breaks": True, "html": True})
+    md.use(front_matter_plugin)
+    return md
 
 
 def read_content(filename):
@@ -75,8 +86,7 @@ def read_content(filename):
 
     # Convert Markdown content to HTML.
     if filename.endswith((".md", ".mkd", ".mkdn", ".mdown", ".markdown")):
-        md = MarkdownIt("js-default", {"breaks": True, "html": True})
-        text = md.render(text)
+        text = markdown_client().render(text)
 
     # Update the dictionary with content and RFC 2822 date.
     content.update({"content": text, "rfc_2822_date": rfc_2822_format(content["date"])})
@@ -97,7 +107,6 @@ def make_pages(
     src,
     dst,
     template,
-    write_file=True,
     **params,
 ):
     """Generate pages from page content."""
@@ -120,8 +129,7 @@ def make_pages(
         output = env.get_template(template).render(**page_params)
         dst_path = rename_file_with_slug(dst, **page_params)
         logger.info(f"Rendering {src_path} => {dst_path} ...")
-        if write_file:
-            fwrite(dst_path, output)
+        fwrite(dst_path, output)
 
     return sorted(items, key=lambda x: x["date"], reverse=True)
 
