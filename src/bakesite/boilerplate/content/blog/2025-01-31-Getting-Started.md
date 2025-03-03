@@ -1,13 +1,15 @@
-<!-- title:Getting Started with Bakesite -->
+---
+title: Getting Started with Bakesite
+---
 
-Here are some examples of how to write markdown. 
+Here are some examples of how to write markdown.
 
 # Heading 1
 ## Heading 2
 ### Heading 3
 
-**Bold text**  
-*Italic text*  
+**Bold text**
+*Italic text*
 ~~Strikethrough~~
 
 - Item 1
@@ -15,9 +17,9 @@ Here are some examples of how to write markdown.
   - Subitem 2.1
   - Subitem 2.2
 
-1. First item  
-2. Second item  
-3. Third item  
+1. First item
+2. Second item
+3. Third item
 
 [Bakesite](https://github.com/andrewgy8/bakesite)
 

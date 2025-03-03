@@ -156,39 +156,40 @@ def bake(params, target_dir="_site"):
     write_cname(params, target_dir)
     open(f"{target_dir}/.nojekyll", "a").close()
 
-    # Create site pages.
-    make_pages(
-        "content/index.md", f"{target_dir}/index.html", template="page.html", **params
-    )
-
-    # Create blogs.
-    blog_posts = make_pages(
-        "content/blog/*.md",
-        target_dir + "/blog/{slug}/index.html",
-        blog="blog",
-        template="post.html",
-        **params,
-    )
-
-    # # Create blog list pages.
-    make_list(
-        blog_posts,
-        f"{target_dir}/blog/index.html",
-        blog="blog",
-        title="Blog",
-        **params,
-    )
-
-    # # Create RSS feeds.
-    make_list(
-        blog_posts,
-        f"{target_dir}/blog/rss.xml",
-        list_item_template="item.xml",
-        list_template="feed.xml",
-        blog="blog",
-        title="Blog",
-        **params,
-    )
+    for path in glob.glob("content/*"):
+        if os.path.isdir(path):
+            dir_name = os.path.basename(path)
+            blog_posts = make_pages(
+                f"content/{dir_name}/*.md",
+                target_dir + f"/{dir_name}" + "/{slug}/index.html",
+                blog=dir_name,
+                template="post.html",
+                **params,
+            )
+            make_list(
+                blog_posts,
+                f"{target_dir}/{dir_name}/index.html",
+                blog=f"{dir_name}",
+                title=f"{dir_name.capitalize()}",
+                **params,
+            )
+            make_list(
+                blog_posts,
+                f"{target_dir}/{dir_name}/rss.xml",
+                list_item_template="item.xml",
+                list_template="feed.xml",
+                blog=f"{dir_name}",
+                title=f"{dir_name.capitalize()}",
+                **params,
+            )
+        else:
+            file_name = os.path.basename(path).split(".")[0]
+            make_pages(
+                str(path),
+                f"{target_dir}/{file_name}.html",
+                template="page.html",
+                **params,
+            )
 
     # Fix attachments
     if os.path.isdir("content/blog/attachment"):

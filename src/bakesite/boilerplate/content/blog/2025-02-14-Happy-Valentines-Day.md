@@ -1,4 +1,6 @@
-<!-- title:Happy Valentines Day! -->
+---
+title: Happy Valentines Day!
+---
 
 Valentines is the day of love.
 
