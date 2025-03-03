@@ -30,7 +30,6 @@ This will generate the static files and start a local server.
 
 Then visit `http://localhost:8200`
 
-
 ## `bakesite.yaml` Configuration
 
 ### base_path
