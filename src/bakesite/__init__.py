@@ -2,7 +2,7 @@ import sys
 
 import click
 
-from bakesite import boilerplate, compile, parameters, server
+from bakesite import boilerplate, compile, parameters, server, logging  # noqa: F401
 
 
 @click.group()
@@ -22,11 +22,11 @@ def _bake():
         params = parameters.load()
     except ImportError:
         click.echo(
-            "settings.py file not found. Please add one to the project.", err=True
+            "bakesite.yaml file not found. Please add one to the project.", err=True
         )
         sys.exit(1)
     except AttributeError:
-        click.echo("settings.py file does not contain a params dictionary.", err=True)
+        click.echo("bakesite.yaml file does not contain a params dictionary.", err=True)
         sys.exit(1)
     compile.bake(params=params)
 
