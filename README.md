@@ -31,6 +31,54 @@ This will generate the static files and start a local server.
 Then visit `http://localhost:8200`
 
 
+## `bakesite.yaml` Configuration
+
+### base_path
+**Type:** `string`
+**Default:** `""`
+The base path for the site. Leave empty for the root directory.
+
+### subtitle
+**Type:** `string`
+**Example:** `"My Awesome Website"`
+A short descriptive subtitle for the site.
+
+### author
+**Type:** `string`
+**Example:** `"John Doe"`
+The name of the site author or owner.
+
+### site_url
+**Type:** `string`
+**Example:** `"https://example.com"`
+The full URL of the site.
+
+### current_year
+**Type:** `integer`
+**Default:** `2025`
+The current year for copyright or display purposes.
+
+### github_url
+**Type:** `string`
+**Example:** `"https://github.com/yourusername"`
+Link to the author's GitHub profile.
+
+### linkedin_url
+**Type:** `string`
+**Example:** `"https://www.linkedin.com/in/yourprofile"`
+Link to the author's LinkedIn profile.
+
+### gtag_id
+**Type:** `string`
+**Example:** `"G-XXXXXXXXXX"`
+Google Analytics tracking ID.
+
+### cname
+**Type:** `string`
+**Example:** `"yourcustomdomain.com"`
+Custom domain name for the site, if applicable.
+
+
 ### Motivation
 
 While I have used Jekyll, Pelican and Hugo for different iterations of my personal blog, I always felt the solution to the simple problem of static site building was over-engineered.
