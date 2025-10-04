@@ -2,7 +2,7 @@ import sys
 
 import click
 
-from bakesite import boilerplate, compile, parameters, server, logging  # noqa: F401
+from bakesite import boilerplate, compile, parameters, server, watcher, logging  # noqa: F401
 
 
 @click.group()
@@ -50,10 +50,22 @@ def bake():
     default=False,
     help="Bake the site before serving.",
 )
-def serve(port, do_bake):
+@click.option(
+    "--watch",
+    "do_watch",
+    is_flag=True,
+    default=False,
+    help="Watch for file changes and rebuild automatically.",
+)
+def serve(port, do_bake, do_watch):
     if do_bake:
         _bake()
-    server.serve(port)
+
+    watch_callback = None
+    if do_watch:
+        watch_callback = lambda: watcher.watch(_bake)  # noqa: E731
+
+    server.serve(port, watch_callback=watch_callback)
 
 
 if __name__ == "__main__":

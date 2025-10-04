@@ -25,6 +25,7 @@ dependencies = [
     "jinja2>=3.1.5",
     "markdown-it-py[plugins]",
     "pyyaml>=6.0.2",
+    "watchdog>=6.0.0",
 ]
 
 [project.scripts]
