@@ -32,51 +32,62 @@ Then visit `http://localhost:8200`
 
 ## `bakesite.yaml` Configuration
 
-### base_path
-**Type:** `string`
-**Default:** `""`
-The base path for the site. Leave empty for the root directory.
+Configure your site by editing the `bakesite.yaml` file in your project root:
 
-### subtitle
-**Type:** `string`
-**Example:** `"My Awesome Website"`
-A short descriptive subtitle for the site.
+```yaml
+# Base path for the site (leave empty for root directory)
+base_path: ""
 
-### author
-**Type:** `string`
-**Example:** `"John Doe"`
-The name of the site author or owner.
+# Site metadata
+subtitle: "My Awesome Website"
+author: "John Doe"
+site_url: "https://example.com"
+current_year: 2025
 
-### site_url
-**Type:** `string`
-**Example:** `"https://example.com"`
-The full URL of the site.
+# Social links
+github_url: "https://github.com/yourusername"
+linkedin_url: "https://www.linkedin.com/in/yourprofile"
 
-### current_year
-**Type:** `integer`
-**Default:** `2025`
-The current year for copyright or display purposes.
+# Analytics
+gtag_id: "G-XXXXXXXXXX"
 
-### github_url
-**Type:** `string`
-**Example:** `"https://github.com/yourusername"`
-Link to the author's GitHub profile.
+# Custom domain (optional)
+cname: "yourcustomdomain.com"
+```
 
-### linkedin_url
-**Type:** `string`
-**Example:** `"https://www.linkedin.com/in/yourprofile"`
-Link to the author's LinkedIn profile.
+## Front Matter
 
-### gtag_id
-**Type:** `string`
-**Example:** `"G-XXXXXXXXXX"`
-Google Analytics tracking ID.
+Add metadata to your markdown files using YAML front matter at the top of each file:
 
-### cname
-**Type:** `string`
-**Example:** `"yourcustomdomain.com"`
-Custom domain name for the site, if applicable.
+```markdown
+---
+title: My First Blog Post
+author: Jane Doe
+render: true
+---
 
+Your content goes here...
+```
+
+### Available Front Matter Fields
+
+- `title`: The title of your post or page
+- `author`: Override the default author for this specific post
+- `render`: Set to `true` to enable Jinja2 template rendering within your markdown content, allowing you to use template variables and parameters
+- Any custom fields you define will be available in your templates
+
+### Example with Template Rendering
+
+When `render: true` is set, you can use template variables in your markdown:
+
+```markdown
+---
+title: About {{ author }}
+render: true
+---
+
+Welcome to {{ site_url }}! This site was built in {{ current_year }}.
+```
 
 ### Motivation
 
@@ -95,6 +106,8 @@ Thanks to a previous project by Sunaina Pai, Makesite, for providing the foundat
 ## Philosophy
 
 > Make the easy things simple, and the hard things possible.
+
+> This site was built to last.
 
 ## A Heads Up
 
