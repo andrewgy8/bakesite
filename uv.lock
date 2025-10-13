@@ -3,7 +3,7 @@ requires-python = ">=3.9"
 
 [[package]]
 name = "bakesite"
-version = "0.4.0"
+version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
