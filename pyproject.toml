@@ -1,6 +1,6 @@
 [project]
 name = "bakesite"
-version = "0.6.0"
+version = "0.6.1"
 description = "The Simplest Static Site Generator"
 readme = "README.md"
 classifiers = [
