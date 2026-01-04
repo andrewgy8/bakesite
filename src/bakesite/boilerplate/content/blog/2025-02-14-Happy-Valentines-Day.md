@@ -1,5 +1,8 @@
 ---
 title: Happy Valentines Day!
+tags:
+  - poems
+  - love
 ---
 
 Valentines is the day of love.
