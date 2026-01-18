@@ -4,17 +4,17 @@
 <div class="blog-layout">
   <div class="blog-main">
     <h1>{{ title }}</h1>
+    <p class="tag-description">
+      <a href="{{ base_path }}/{{ blog }}/" class="back-link">&larr; All posts</a>
+    </p>
     {{ content }}
-    <section>
-      <a class="rss" href="{{ base_path }}/{{ blog }}/rss.xml">RSS</a>
-    </section>
   </div>
   {% if all_tags %}
   <aside class="blog-sidebar">
     <h3>Tags</h3>
     <div class="sidebar-tags">
-      {% for tag in all_tags %}
-      <a href="{{ base_path }}/{{ blog }}/tag/{{ tag }}/" class="tag">{{ tag }}</a>
+      {% for t in all_tags %}
+      <a href="{{ base_path }}/{{ blog }}/tag/{{ t }}/" class="tag{% if t == tag %} tag-active{% endif %}">{{ t }}</a>
       {% endfor %}
     </div>
   </aside>

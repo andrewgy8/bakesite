@@ -6,6 +6,13 @@
     <a href="{{ base_path }}/{{ blog }}/{{ slug }}/">{{ title }}</a>
   </h1>
   <p class="meta">Published on {{ date }} by <b>{{ author }}</b></p>
+  {% if tags %}
+  <div class="tags">
+    {% for tag in tags %}
+    <a href="{{ base_path }}/{{ blog }}/tag/{{ tag }}/" class="tag">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
   {{ content }}
 </article>
 {% endblock %}

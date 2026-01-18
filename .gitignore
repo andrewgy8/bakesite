@@ -10,3 +10,4 @@ wheels/
 .venv
 .coverage
 _site
+.playwright-mcp/

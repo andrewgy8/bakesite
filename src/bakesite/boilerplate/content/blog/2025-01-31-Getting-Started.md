@@ -1,5 +1,8 @@
 ---
 title: Getting Started with Bakesite
+tags:
+  - tutorial
+  - markdown
 ---
 
 Here are some examples of how to write markdown.

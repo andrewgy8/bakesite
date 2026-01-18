@@ -121,6 +121,18 @@ def make_pages(
     return sorted(items, key=lambda x: x["date"], reverse=True)
 
 
+def collect_all_tags(posts):
+    """Collect all unique tags from posts and return a sorted list."""
+    all_tags = set()
+    for post in posts:
+        tags = post.get("tags", [])
+        if isinstance(tags, list):
+            all_tags.update(tags)
+        elif isinstance(tags, str):
+            all_tags.add(tags)
+    return sorted(all_tags)
+
+
 def make_list(
     posts, dst, list_item_template="item.html", list_template="list.html", **params
 ):
@@ -139,6 +151,27 @@ def make_list(
 
     logger.info(f"Rendering list => {dst_path} ...")
     fwrite(dst_path, output)
+
+
+def make_tag_pages(posts, target_dir, blog, all_tags, **params):
+    """Generate individual tag pages showing posts with that tag."""
+    for tag in all_tags:
+        # Filter posts that have this tag
+        tagged_posts = [post for post in posts if tag in post.get("tags", [])]
+        if tagged_posts:
+            make_list(
+                tagged_posts,
+                f"{target_dir}/{blog}/tag/{tag}/index.html",
+                list_template="tag_list.html",
+                blog=blog,
+                title=f"Posts tagged: {tag}",
+                tag=tag,
+                all_tags=all_tags,
+                **params,
+            )
+            logger.info(
+                f"Rendering tag page for '{tag}' with {len(tagged_posts)} posts"
+            )
 
 
 def write_cname(params, target_dir):
@@ -166,11 +199,15 @@ def bake(params, target_dir="_site"):
                 template="post.html",
                 **params,
             )
+            # Collect all tags from blog posts
+            all_tags = collect_all_tags(blog_posts)
+
             make_list(
                 blog_posts,
                 f"{target_dir}/{dir_name}/index.html",
                 blog=f"{dir_name}",
                 title=f"{dir_name.capitalize()}",
+                all_tags=all_tags,
                 **params,
             )
             make_list(
@@ -182,6 +219,8 @@ def bake(params, target_dir="_site"):
                 title=f"{dir_name.capitalize()}",
                 **params,
             )
+            # Generate tag pages
+            make_tag_pages(blog_posts, target_dir, dir_name, all_tags, **params)
         else:
             file_name = os.path.basename(path).split(".")[0]
             make_pages(
