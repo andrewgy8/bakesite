@@ -77,6 +77,9 @@ Markdown files support YAML front matter:
 title: Post Title
 author: Author Name
 render: true              # Enable Jinja2 rendering in content
+tags:                     # Tags for categorisation (displayed as badges on posts)
+  - Engineering
+  - Python
 ---
 ```
 
@@ -126,7 +129,7 @@ render: true              # Enable Jinja2 rendering in content
 
 - Uses `uv_build>=0.9.2,<0.10.0` as build backend
 - Entry point: `bakesite = "bakesite:main"`
-- Version: 0.6.1
+- Version: 0.7.0
 
 ## Important Notes
 
