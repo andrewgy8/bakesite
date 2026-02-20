@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import datetime
 from unittest.mock import patch
 import pytest
 
@@ -28,7 +29,7 @@ def mock_params():
         "subtitle": "AGY",
         "author": "Andrew Graham-Yooll",
         "site_url": "https://test.grahamyooll.com",
-        "current_year": 2002,
+        "current_year": datetime.now().year,
         "github_url": "https://github.com/andrewgy8",
         "linkedin_url": "https://www.linkedin.com",
         "gtag_id": "G-1234",

@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import pytest
 from bakesite import parameters
@@ -13,7 +14,7 @@ class TestLoad:
             "subtitle": "<Your subtitle here>",
             "author": "<Your name here>",
             "site_url": "https://<your site here>.com",
-            "current_year": 2025,
+            "current_year": datetime.now().year,
             "github_url": "https://github.com/<your github here>",
             "linkedin_url": "https://www.linkedin.com/<your linkedin here>",
             "gtag_id": "<Your gtag here>",
@@ -32,7 +33,7 @@ class TestLoad:
             "subtitle": "<Your subtitle here>",
             "author": "<Your name here>",
             "site_url": "https://<your site here>.com",
-            "current_year": 2025,
+            "current_year": datetime.now().year,
             "github_url": "https://github.com/<your github here>",
             "linkedin_url": "https://www.linkedin.com/<your linkedin here>",
             "gtag_id": "<Your gtag here>",

@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime
 
 import click
 import yaml
@@ -14,6 +15,7 @@ def load(project_path="."):
             if os.path.exists(file_path):
                 with open(file_path, "r", encoding="utf-8") as file:
                     settings = yaml.safe_load(file)
+                    settings["current_year"] = datetime.now().year
                     click.echo(f"Baking site with parameters: {settings}")
                     return settings
         else:
