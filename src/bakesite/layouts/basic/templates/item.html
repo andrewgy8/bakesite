@@ -12,4 +12,11 @@
   <div>
     <a class="more" href="{{ base_path }}/{{ blog }}/{{ slug }}/">Read More</a>
   </div>
+  {% if tags %}
+  <div class="tags">
+    {% for tag in tags %}
+    <a href="{{ base_path }}/{{ blog }}/tag/{{ tag }}/" class="tag">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
 </article>

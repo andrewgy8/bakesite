@@ -42,7 +42,6 @@ base_path: ""
 subtitle: "My Awesome Website"
 author: "John Doe"
 site_url: "https://example.com"
-current_year: 2025
 
 # Social links
 github_url: "https://github.com/yourusername"
